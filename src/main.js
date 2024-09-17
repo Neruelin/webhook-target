@@ -35,4 +35,6 @@ http.createServer((req, res) => {
 
     runAppServer.process = startAppServer();
     
-}).listen(3002)
+}).listen(3002, '0.0.0.0', () => {
+  console.log("started webhook server on http://0.0.0.0:3000");
+})
