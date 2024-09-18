@@ -23,7 +23,7 @@ function startAppServer() {
 
 const runAppServer = {process: startAppServer()}
 
-http.createServer((req, res) => {
+http.createServer(async (req, res) => {
 
     res.writeHead(200);
     res.end();
@@ -33,8 +33,10 @@ http.createServer((req, res) => {
         process.kill(-runAppServer.process.pid)
     }
 
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     runAppServer.process = startAppServer();
     
 }).listen(3002, '0.0.0.0', () => {
-  console.log("started webhook server on http://0.0.0.0:3000");
+  console.log("started webhook server on http://0.0.0.0:3002");
 })
