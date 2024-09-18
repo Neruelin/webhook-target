@@ -32,7 +32,7 @@ http.createServer(async (req, res) => {
         process.kill(-runAppServer.process.pid)
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
 
     runAppServer.process = startAppServer();
     
