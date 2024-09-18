@@ -29,7 +29,6 @@ http.createServer(async (req, res) => {
     res.end();
 
     if (runAppServer.process && runAppServer.process.killed != true) {
-        runAppServer.process.kill();
         process.kill(-runAppServer.process.pid)
     }
 
