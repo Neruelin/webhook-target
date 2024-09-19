@@ -49,6 +49,10 @@ function startAppServer() {
   });
 }
 
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 http.createServer(async (req, res) => {
 
   res.writeHead(200);
@@ -56,10 +60,13 @@ http.createServer(async (req, res) => {
 
   await reset();
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await sleep(3000);
 
   startAppServer();
 
-}).listen(3002, '0.0.0.0', () => {
+}).listen(3002, '0.0.0.0', async () => {
   console.log("started webhook server on http://0.0.0.0:3002");
+  reset()
+  await sleep(3000)
+  startAppServer()
 })
