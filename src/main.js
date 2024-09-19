@@ -17,15 +17,19 @@ async function reset() {
   let p3004 = await getPid(3004);
   try {
     process.kill(parseInt(p3000));
+    console.log(`killed ${parseInt(p3000)} on 3000`);
   } catch (err) {}
   try {
     process.kill(parseInt(p3001));
+    console.log(`killed ${parseInt(p3001)} on 3001`);
   } catch (err) {}
   try {
     process.kill(parseInt(p3003));
+    console.log(`killed ${parseInt(p3003)} on 3003`);
   } catch (err) {}
   try {
     process.kill(parseInt(p3004));
+    console.log(`killed ${parseInt(p3004)} on 3004`);
   } catch (err) {}
 }
 
