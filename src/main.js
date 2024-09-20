@@ -2,6 +2,12 @@ var http = require("http");
 const { spawn, exec } = require("node:child_process");
 const process = require("node:process");
 
+const cooldown = {
+  "availableAfter": Date.now()
+}
+
+const cooldownDuration = 30000; // 30 sec
+
 async function getPid(port) {
   return new Promise((resolve) => {
     exec(`sudo netstat -tlnp | awk -F '  ' '/:${port} */ {split($NF,a,"/"); return a[1]}'`, (err, stdout, stderr) => {
@@ -12,6 +18,15 @@ async function getPid(port) {
 
 async function reset() {
   console.log("resetting");
+
+  const currentTime = Date.now();
+
+  if (currentTime < cooldown.availableAfter) {
+    console.log("aborting reset, too soon to reset again.");
+    return;
+  } 
+
+  cooldown.availableAfter = Date.now() + cooldownDuration;
   
   let p3000 = await getPid(3000);
   let p3001 = await getPid(3001);
@@ -31,6 +46,7 @@ async function reset() {
   } catch (err) {
     console.log("failed to kill 3001");
   }
+
 
   console.log("reset completed");
 }
