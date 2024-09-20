@@ -13,8 +13,6 @@ async function getPid(port) {
 async function reset() {
   let p3000 = await getPid(3000);
   let p3001 = await getPid(3001);
-  let p3003 = await getPid(3003);
-  let p3004 = await getPid(3004);
   try {
     process.kill(parseInt(p3000));
     console.log(`killed ${parseInt(p3000)} on 3000`);
@@ -23,25 +21,17 @@ async function reset() {
     process.kill(parseInt(p3001));
     console.log(`killed ${parseInt(p3001)} on 3001`);
   } catch (err) {}
-  try {
-    process.kill(parseInt(p3003));
-    console.log(`killed ${parseInt(p3003)} on 3003`);
-  } catch (err) {}
-  try {
-    process.kill(parseInt(p3004));
-    console.log(`killed ${parseInt(p3004)} on 3004`);
-  } catch (err) {}
 }
 
 function startAppServer() {
-  let child = spawn('sh', ['./script.sh'], { detached: true });
+  let child = spawn('sh', ['./fetchRepo.sh'], { detached: true });
 
   console.log("spawned " + child.pid);
 
   let temp = { pid: child.pid };
 
   child.stdout.on('data', (data) => {
-    console.log(`stdout (${temp.pid} : ${process.pid}): ${data}`);
+    console.log(`stdout (${temp.pid}): ${data}`);
   });
 
   child.stderr.on('data', (data) => {
@@ -49,7 +39,33 @@ function startAppServer() {
   });
 
   child.on('close', (code) => {
-    console.log(` (${temp.pid}) child process exited with code ${code}`);
+    console.log(`fetchRepo (${temp.pid}) child process exited with code ${code}`);
+
+    let backendChild = spawn('sh', ['./startBackend.sh'], { detached: true });
+    let frontendChild = spawn('sh', ['./startFrontend.sh'], { detached: true });
+    backendChild.stdout.on('data', (data) => {
+      console.log(`stdout backend (${backendChild.pid}): ${data}`);
+    });
+  
+    backendChild.stderr.on('data', (data) => {
+      console.error(`stderr backend (${backendChild.pid}): ${data}`);
+    });
+
+    backendChild.on('close', (code) => {
+      console.log(` (${backendChild.pid}) child process exited with code ${code}`);
+    });
+
+    frontendChild.stdout.on('data', (data) => {
+      console.log(`stdout frontend (${frontendChild.pid}): ${data}`);
+    });
+  
+    frontendChild.stderr.on('data', (data) => {
+      console.error(`stderr frontend (${frontendChild.pid}): ${data}`);
+    });
+
+    frontendChild.on('close', (code) => {
+      console.log(` (${frontendChild.pid}) child process exited with code ${code}`);
+    });
   });
 }
 
