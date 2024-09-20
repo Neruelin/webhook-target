@@ -11,16 +11,28 @@ async function getPid(port) {
 }
 
 async function reset() {
+  console.log("resetting");
+  
   let p3000 = await getPid(3000);
   let p3001 = await getPid(3001);
+
+  console.log("pids:");
+  console.log([p3000, p3001]);
+
   try {
     process.kill(parseInt(p3000));
     console.log(`killed ${parseInt(p3000)} on 3000`);
-  } catch (err) {}
+  } catch (err) {
+    console.log("failed to kill 3000");
+  }
   try {
     process.kill(parseInt(p3001));
     console.log(`killed ${parseInt(p3001)} on 3001`);
-  } catch (err) {}
+  } catch (err) {
+    console.log("failed to kill 3001");
+  }
+
+  console.log("reset completed");
 }
 
 function startAppServer() {
