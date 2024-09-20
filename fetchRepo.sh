@@ -1,3 +1,2 @@
-cd ~ && \
-rm -rf ~/Pantry && \
-git clone https://github.com/Neruelin/Pantry
+cd ~/Pantry && \
+git pull https://github.com/Neruelin/Pantry
