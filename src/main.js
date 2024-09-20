@@ -10,7 +10,7 @@ const cooldownDuration = 30000; // 30 sec
 
 async function getPid(port) {
   return new Promise((resolve) => {
-    exec(`sudo netstat -tlnp | awk -F '  ' '/:${port} */ {split($NF,a,"/"); print a[1]}'`, (err, stdout, stderr) => {
+    exec(`sudo netstat -tlnp | awk -F ' ' '/:${port} */ {split($NF,a,"/"); print a[1]}'`, (err, stdout, stderr) => {
       console.log("getPid", err);
       console.log("getPid", stdout.trim());
       console.log("getPid", stderr);
