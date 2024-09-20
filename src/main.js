@@ -26,7 +26,7 @@ async function reset() {
 
   if (currentTime < cooldown.availableAfter) {
     console.log("aborting reset, too soon to reset again.");
-    return;
+    return new Promise((resolve) => resolve(false));
   } 
 
   cooldown.availableAfter = Date.now() + cooldownDuration;
@@ -52,6 +52,7 @@ async function reset() {
 
 
   console.log("reset completed");
+  return new Promise((resolve) => resolve(true));
 }
 
 function startAppServer() {
@@ -109,7 +110,9 @@ http.createServer(async (req, res) => {
   res.writeHead(200);
   res.end();
 
-  await reset();
+  let success = await reset();
+
+  if (!success) return;
 
   await sleep(3000);
 
